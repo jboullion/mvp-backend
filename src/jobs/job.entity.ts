@@ -2,10 +2,12 @@ import { Exclude } from 'class-transformer';
 import { User } from '../auth/user.entity';
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { JobStatus } from './job-status.enum';
 
@@ -32,6 +34,9 @@ export class Job {
   @Exclude({ toPlainOnly: true })
   user: User;
 
-  @Column({ type: 'timestamptz' })
-  created: Date;
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }

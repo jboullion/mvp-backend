@@ -3,10 +3,12 @@ import {
   Controller,
   Delete,
   Get,
+  HttpStatus,
   Param,
   Patch,
   Post,
   Query,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
@@ -49,7 +51,7 @@ export class JobsController {
     @GetUser() user: User,
   ): Promise<Job> {
     this.logger.verbose(
-      `User ${user.username} creating a job: ${JSON.stringify(createJobDto)}`,
+      `User ${user.email} creating a job: ${JSON.stringify(createJobDto)}`,
     );
     return this.jobsService.createJob(createJobDto, user);
   }

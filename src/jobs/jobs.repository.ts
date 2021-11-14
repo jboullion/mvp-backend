@@ -42,7 +42,7 @@ export class JobsRepository extends Repository<Job> {
       return jobs;
     } catch (error) {
       this.logger.error(
-        `getJobs failed for user ${user.username}. Filters: ${JSON.stringify({
+        `getJobs failed for user ${user.email}. Filters: ${JSON.stringify({
           filterDto,
         })}`,
         error.stack,

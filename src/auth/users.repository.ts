@@ -10,7 +10,7 @@ import { User } from './user.entity';
 import * as bcrypt from 'bcrypt';
 
 enum UserRepoErrorCodes {
-  USERNAME_EXISTS = '23505',
+  EMAIL_EXISTS = '23505',
 }
 
 @EntityRepository(User)
@@ -18,13 +18,13 @@ export class UsersRepository extends Repository<User> {
   private logger = new Logger('UsersRepository', { timestamp: true });
 
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    const { username, password } = authCredentialsDto;
+    const { email, password } = authCredentialsDto;
 
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = this.create({
-      username,
+      email,
       password: hashedPassword,
       status: UserStatus.UNACTIVATED,
     });
@@ -32,15 +32,13 @@ export class UsersRepository extends Repository<User> {
     try {
       await this.save(user);
     } catch (error) {
-      if (error.code === UserRepoErrorCodes.USERNAME_EXISTS) {
-        throw new ConflictException('Username already exists');
+      if (error.code === UserRepoErrorCodes.EMAIL_EXISTS) {
+        throw new ConflictException('Email already in use');
       } else {
         this.logger.error(
-          `createUser failed for user ${username}. Credentials: ${JSON.stringify(
-            {
-              authCredentialsDto,
-            },
-          )}`,
+          `createUser failed for email ${email}. Credentials: ${JSON.stringify({
+            authCredentialsDto,
+          })}`,
           error.stack,
         );
         throw new InternalServerErrorException();

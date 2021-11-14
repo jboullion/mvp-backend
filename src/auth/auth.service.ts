@@ -21,13 +21,13 @@ export class AuthService {
   async signIn(
     authCredentialsDto: AuthCredentialsDto,
   ): Promise<{ accessToken: string }> {
-    const { username, password } = authCredentialsDto;
+    const { email, password } = authCredentialsDto;
 
-    const user = await this.usersRepository.findOne({ username });
+    const user = await this.usersRepository.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
       //return 'success';
-      const payload: JwtPayload = { username };
+      const payload: JwtPayload = { email };
       const accessToken: string = await this.jwtService.sign(payload);
 
       return { accessToken };

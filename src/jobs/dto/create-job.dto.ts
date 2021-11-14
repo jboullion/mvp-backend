@@ -1,9 +1,10 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
 export class CreateJobDto {
   @IsNotEmpty()
   title: string;
 
-  @IsNotEmpty()
+  @IsString()
+  @MaxLength(255)
   description: string;
 }
