@@ -6,6 +6,7 @@ import { UsersRepository } from './users.repository';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import { AuthRefreshDto } from './dto/auth-refresh.dto';
 
 @Injectable()
 export class AuthService {
@@ -20,19 +21,47 @@ export class AuthService {
 
   async signIn(
     authCredentialsDto: AuthCredentialsDto,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const { email, password } = authCredentialsDto;
 
     const user = await this.usersRepository.findOne({ email });
 
     if (user && (await bcrypt.compare(password, user.password))) {
-      //return 'success';
-      const payload: JwtPayload = { email };
-      const accessToken: string = await this.jwtService.sign(payload);
-
-      return { accessToken };
+      return await this.generateTokens(email, user);
     }
 
     throw new UnauthorizedException('Please check login credentials');
+  }
+
+  async refreshSignIn(
+    authRefreshDto: AuthRefreshDto,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
+    const { email, refreshtoken } = authRefreshDto;
+
+    const user = await this.usersRepository.findOne({ email, refreshtoken });
+
+    if (user && new Date() < new Date(user.refreshtokenexpires)) {
+      return await this.generateTokens(email, user);
+    }
+
+    throw new UnauthorizedException('Please check login credentials');
+  }
+
+  async generateTokens(email: string, user: User) {
+    const payload: JwtPayload = { email };
+    const accessToken: string = this.jwtService.sign(payload);
+    const refreshToken: string = await this.generateRefreshToken(user.id);
+    return { accessToken, refreshToken };
+  }
+
+  async generateRefreshToken(userId: number): Promise<string> {
+    const refreshToken = Math.random().toString(36).substring(2, 18);
+    const expirydate = new Date();
+    expirydate.setDate(expirydate.getDate() + 6);
+    await this.usersRepository.update(userId, {
+      refreshtoken: refreshToken,
+      refreshtokenexpires: expirydate,
+    });
+    return refreshToken;
   }
 }

@@ -10,6 +10,7 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+  // TODO: Http Only cookies https://www.learmoreseekmore.com/2021/04/part-1-vuejs-jwt-auth-cookie-access-token-usage.html
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new TransformInterceptor());
