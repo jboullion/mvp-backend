@@ -1,13 +1,14 @@
-import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthRefreshDto } from './dto/auth-refresh.dto';
-import { GetUser } from './get-user.decorator';
 import { User } from './user.entity';
+import { Logger } from '@nestjs/common';
 
 @Controller('auth')
 export class AuthController {
+  private logger = new Logger('AuthController', { timestamp: true });
+
   constructor(private authService: AuthService) {}
 
   @Post('/signup')

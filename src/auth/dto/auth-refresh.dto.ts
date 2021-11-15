@@ -5,5 +5,5 @@ export class AuthRefreshDto {
   email: string;
 
   @IsString()
-  refreshtoken: string;
+  refreshToken: string;
 }

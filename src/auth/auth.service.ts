@@ -36,11 +36,11 @@ export class AuthService {
   async refreshSignIn(
     authRefreshDto: AuthRefreshDto,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const { email, refreshtoken } = authRefreshDto;
+    const { email, refreshToken } = authRefreshDto;
 
-    const user = await this.usersRepository.findOne({ email, refreshtoken });
+    const user = await this.usersRepository.findOne({ email, refreshToken });
 
-    if (user && new Date() < new Date(user.refreshtokenexpires)) {
+    if (user && new Date() < new Date(user.refreshTokenExpires)) {
       return await this.generateTokens(email, user);
     }
 
@@ -59,8 +59,8 @@ export class AuthService {
     const expirydate = new Date();
     expirydate.setDate(expirydate.getDate() + 6);
     await this.usersRepository.update(userId, {
-      refreshtoken: refreshToken,
-      refreshtokenexpires: expirydate,
+      refreshToken: refreshToken,
+      refreshTokenExpires: expirydate,
     });
     return refreshToken;
   }

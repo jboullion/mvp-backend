@@ -34,10 +34,10 @@ export class JwtRefreshTokenStrategy extends PassportStrategy(
     if (!user) {
       throw new UnauthorizedException();
     }
-    if (req.body.refreshToken != (await user).refreshtoken) {
+    if (req.body.refreshToken != (await user).refreshToken) {
       throw new UnauthorizedException();
     }
-    if (new Date() > new Date((await user).refreshtokenexpires)) {
+    if (new Date() > new Date((await user).refreshTokenExpires)) {
       throw new UnauthorizedException();
     }
     return user;

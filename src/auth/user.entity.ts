@@ -21,11 +21,11 @@ export class User {
   password: string;
 
   @Column({ nullable: true })
-  refreshtoken: string;
+  refreshToken: string;
 
   @Column({ nullable: true })
   @CreateDateColumn()
-  refreshtokenexpires: Date;
+  refreshTokenExpires: Date;
 
   @Column({ default: UserStatus.UNACTIVATED })
   status: UserStatus;

@@ -6,7 +6,6 @@ import { UsersRepository } from './users.repository';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './jwt.strategy';
-import { JwtRefreshTokenStrategy } from './jwt.refreshtoken.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
